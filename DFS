@@ -1,0 +1,154 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNJj9HdHpVOqpam/TfTJf4J",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/BlackPanther04/GDSC-Event-Workshop/blob/main/DFS\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "kj8kJ3JdK-Vw"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from collections import deque\n",
+        "\n",
+        "def bfs(start, goal):\n",
+        "    def get_neighbors(state):\n",
+        "        neighbors = []\n",
+        "        x, y = [(ix, iy) for ix, row in enumerate(state) for iy, v in enumerate(row) if v == 0][0]\n",
+        "        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right\n",
+        "        for dx, dy in directions:\n",
+        "            new_x, new_y = x + dx, y + dy\n",
+        "            if 0 <= new_x < 3 and 0 <= new_y < 3:\n",
+        "                new_state = [row[:] for row in state]  # Make a copy of the state\n",
+        "                new_state[x][y], new_state[new_x][new_y] = new_state[new_x][new_y], new_state[x][y]\n",
+        "                neighbors.append(new_state)\n",
+        "        return neighbors\n",
+        "\n",
+        "    # BFS implementation\n",
+        "    queue = deque([(start, [])])\n",
+        "    visited = set()\n",
+        "    visited.add(tuple(map(tuple, start)))\n",
+        "\n",
+        "    while queue:\n",
+        "        current_state, path = queue.popleft()\n",
+        "        if current_state == goal:\n",
+        "            return path\n",
+        "\n",
+        "        for neighbor in get_neighbors(current_state):\n",
+        "            neighbor_tuple = tuple(map(tuple, neighbor))\n",
+        "            if neighbor_tuple not in visited:\n",
+        "                visited.add(neighbor_tuple)\n",
+        "                queue.append((neighbor, path + [neighbor]))\n",
+        "\n",
+        "    return None\n",
+        "\n",
+        "# Example usage:\n",
+        "start_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]\n",
+        "goal_state = [[1, 2, 3], [4, 5, 6], [7, 0, 8]]\n",
+        "\n",
+        "solution = bfs(start_state, goal_state)\n",
+        "print(f\"BFS Solution Path: {solution}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "skkRY0XgSmZ0",
+        "outputId": "ab6a4f9c-50b8-4d16-a955-254bcd42bd59"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "BFS Solution Path: [[[1, 2, 3], [4, 5, 6], [7, 0, 8]]]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def dfs(start, goal):\n",
+        "    def get_neighbors(state):\n",
+        "        neighbors = []\n",
+        "        x, y = [(ix, iy) for ix, row in enumerate(state) for iy, v in enumerate(row) if v == 0][0]\n",
+        "        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right\n",
+        "        for dx, dy in directions:\n",
+        "            new_x, new_y = x + dx, y + dy\n",
+        "            if 0 <= new_x < 3 and 0 <= new_y < 3:\n",
+        "                new_state = [row[:] for row in state]  # Make a copy of the state\n",
+        "                new_state[x][y], new_state[new_x][new_y] = new_state[new_x][new_y], new_state[x][y]\n",
+        "                neighbors.append(new_state)\n",
+        "        return neighbors\n",
+        "\n",
+        "    # DFS implementation\n",
+        "    stack = [(start, [])]\n",
+        "    visited = set()\n",
+        "    visited.add(tuple(map(tuple, start)))\n",
+        "\n",
+        "    while stack:\n",
+        "        current_state, path = stack.pop()\n",
+        "        if current_state == goal:\n",
+        "            return path\n",
+        "\n",
+        "        for neighbor in get_neighbors(current_state):\n",
+        "            neighbor_tuple = tuple(map(tuple, neighbor))\n",
+        "            if neighbor_tuple not in visited:\n",
+        "                visited.add(neighbor_tuple)\n",
+        "                stack.append((neighbor, path + [neighbor]))\n",
+        "\n",
+        "    return None\n",
+        "\n",
+        "# Example usage:\n",
+        "solution = dfs(start_state, goal_state)\n",
+        "print(f\"DFS Solution Path: {solution}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0HMfzhfJTaZN",
+        "outputId": "b7d0cd3b-518d-4a71-8d25-209d96049264"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "DFS Solution Path: [[[1, 2, 3], [4, 5, 6], [7, 0, 8]]]\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
